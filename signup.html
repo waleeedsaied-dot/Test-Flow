@@ -1,20 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadeen QA Hub – Start Free Trial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #080B14;
+      color: #E8EDF5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated grid background (same as landing page) */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glowing orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 400px; height: 400px;
+      background: rgba(108,99,255,0.2);
+      top: -150px; right: -100px;
+    }
+    .orb-2 {
+      width: 350px; height: 350px;
+      background: rgba(0,212,255,0.1);
+      bottom: -100px; left: -50px;
+    }
+
+    .signup-card {
+      position: relative;
+      z-index: 2;
+      background: rgba(13, 18, 32, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(108,99,255,0.25);
+      border-radius: 32px;
+      width: 90%;
+      max-width: 480px;
+      padding: 40px 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(0,212,255,0.2) inset;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+    }
+    .logo-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6C63FF, #00D4FF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .logo span {
+      color: #00D4FF;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .subhead {
+      color: #6B7A99;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .benefits {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .benefit {
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #00D4FF;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #A0B0D0;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      background: #0D1220;
+      border: 1px solid #1E2A3A;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #6C63FF;
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.2);
+    }
+    input::placeholder {
+      color: #3A4A62;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 24px 0;
+    }
+    .checkbox input {
+      width: 18px;
+      height: 18px;
+      accent-color: #00D4FF;
+    }
+    .checkbox label {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #A0B0D0;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .checkbox a {
+      color: #00D4FF;
+      text-decoration: none;
+    }
+    .checkbox a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #6C63FF, #00D4FF);
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(108,99,255,0.5);
+      transition: all 0.2s;
+      margin-bottom: 24px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 45px rgba(108,99,255,0.8);
+    }
+
+    .login-link {
+      text-align: center;
+      color: #6B7A99;
+      font-size: 0.85rem;
+    }
+    .login-link a {
+      color: #00D4FF;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      color: #3A4A62;
+      font-size: 0.7rem;
+    }
+    .footer a {
+      color: #6B7A99;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      color: #00D4FF;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #1E2A3A;
+      margin: 24px 0;
+    }
+  </style>
 </head>
 <body>
-    <h1>Signup</h1>
-    <form>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Signup">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="signup-card">
+    <!-- Logo linking back to home -->
+    <a href="index.html" style="text-decoration: none; color: inherit;">
+      <div class="logo">
+        <div class="logo-icon" aria-hidden="true">⚡</div>
+        Shadeen<span> QA Hub</span>
+      </div>
+    </a>
+
+    <h2>Start your free trial</h2>
+    <div class="subhead">No credit card required • Cancel anytime</div>
+
+    <!-- Social proof / benefits chips -->
+    <div class="benefits">
+      <span class="benefit">🤖 AI Auto-Triage</span>
+      <span class="benefit">🎥 Codeless Recording</span>
+      <span class="benefit">💊 Self-Healing</span>
+      <span class="benefit">🔮 Predictive</span>
+    </div>
+
+    <!-- Signup Form -->
+    <form action="#" method="post">
+      <div class="form-group">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" placeholder="John Doe" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Work email</label>
+        <input type="email" id="email" name="email" placeholder="john@company.com" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
+      </div>
+      <div class="form-group">
+        <label for="company">Company (optional)</label>
+        <input type="text" id="company" name="company" placeholder="Acme Inc.">
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="terms" required>
+        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+
+      <button type="submit" class="btn-primary">🚀 Start building quality →</button>
     </form>
+
+    <div class="login-link">
+      Already have an account? <a href="#">Log in</a>
+    </div>
+
+    <hr>
+
+    <div class="footer">
+      <a href="#">© 2026 Shadeen QA Hub</a> • <a href="#">Security</a> • <a href="#">Contact</a>
+    </div>
+  </div>
 </body>
 </html>
