@@ -1,660 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shadeen Waleed QA Hub – AI‑Native QA for ClickUp</title>
-  <meta name="description" content="The world's first AI‑native QA platform built directly inside ClickUp. Automate test creation, triage, and bug tracking with GPT‑4.">
-  <!-- Fonts with display=swap -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    /* ----- (same excellent CSS as before, with a few minor additions) ----- */
-    :root {
-      --bg: #080B14;
-      --surface: #0D1220;
-      --surface2: #111827;
-      --border: rgba(99,179,237,0.12);
-      --accent: #6C63FF;
-      --accent2: #00D4FF;
-      --accent3: #FF6B9D;
-      --accent4: #00FFB3;
-      --text: #E8EDF5;
-      --muted: #6B7A99;
-      --glow: rgba(108,99,255,0.25);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      scroll-behavior: smooth; /* added for anchor links */
-    }
-
-    /* Animated grid background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Orbs */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .orb-1 { width: 500px; height: 500px; background: rgba(108,99,255,0.15); top: -150px; right: -100px; }
-    .orb-2 { width: 400px; height: 400px; background: rgba(0,212,255,0.08); bottom: 20%; left: -100px; }
-    .orb-3 { width: 300px; height: 300px; background: rgba(255,107,157,0.07); bottom: 10%; right: 10%; }
-
-    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 28px; }
-
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(8,11,20,0.8);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 0;
-    }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-    .logo {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em;
-    }
-    .logo-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-    }
-    .logo span { color: var(--accent2); }
-    .nav-pills { display: flex; gap: 4px; }
-    .nav-pill {
-      padding: 7px 16px; border-radius: 8px; font-size: 0.82rem;
-      font-weight: 500; color: var(--muted); cursor: pointer;
-      transition: all .2s; border: none; background: none;
-    }
-    .nav-pill:hover, .nav-pill.active { background: rgba(108,99,255,0.15); color: var(--text); }
-    .nav-cta {
-      padding: 8px 20px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff; border: none; cursor: pointer;
-      box-shadow: 0 0 20px rgba(108,99,255,0.4);
-      transition: all .2s;
-    }
-    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(108,99,255,0.6); }
-
-    /* ── HERO ── */
-    .hero { padding: 100px 0 80px; text-align: center; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);
-      border-radius: 100px; padding: 6px 16px; font-size: 0.78rem;
-      font-weight: 600; color: var(--accent2); margin-bottom: 32px;
-      letter-spacing: 0.05em; text-transform: uppercase;
-    }
-    .pulse-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent4); animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
-
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 4.2rem);
-      font-weight: 900; line-height: 1.08;
-      letter-spacing: -0.04em; margin-bottom: 24px;
-    }
-    .grad { background: linear-gradient(135deg, #fff 0%, var(--accent2) 50%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 560px; margin: 0 auto 40px; line-height: 1.7; }
-
-    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .btn-primary {
-      padding: 14px 32px; border-radius: 12px; font-size: 0.95rem; font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff; border: none; cursor: pointer;
-      box-shadow: 0 0 40px rgba(108,99,255,0.5);
-      transition: all .25s;
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(108,99,255,0.7); }
-    .btn-ghost {
-      padding: 14px 32px; border-radius: 12px; font-size: 0.95rem; font-weight: 600;
-      background: transparent; color: var(--text);
-      border: 1px solid var(--border); cursor: pointer; transition: all .25s;
-    }
-    .btn-ghost:hover { border-color: rgba(108,99,255,0.5); background: rgba(108,99,255,0.08); }
-
-    /* ── STAT STRIP ── */
-    .stats {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-      background: var(--border); border: 1px solid var(--border);
-      border-radius: 16px; overflow: hidden; margin: 60px 0;
-    }
-    .stat { background: var(--surface); padding: 28px 20px; text-align: center; }
-    .stat-val { font-size: 2rem; font-weight: 900; letter-spacing: -0.04em; }
-    .stat-val.c1 { color: var(--accent); }
-    .stat-val.c2 { color: var(--accent2); }
-    .stat-val.c3 { color: var(--accent3); }
-    .stat-val.c4 { color: var(--accent4); }
-    .stat-lbl { font-size: 0.78rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
-
-    /* ── SECTION HEADER ── */
-    .sec-header { text-align: center; margin-bottom: 48px; }
-    .sec-label {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent2); margin-bottom: 12px;
-    }
-    .sec-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; }
-    .sec-sub { color: var(--muted); margin-top: 12px; font-size: 0.95rem; }
-
-    /* ── FEATURE CARDS ── */
-    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 80px; }
-    .feat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 28px;
-      transition: all .3s; position: relative; overflow: hidden;
-    }
-    .feat-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, var(--glow), transparent);
-      opacity: 0; transition: opacity .3s;
-    }
-    .feat-card:hover { border-color: rgba(108,99,255,0.4); transform: translateY(-4px); }
-    .feat-card:hover::before { opacity: 1; }
-    .feat-card.span2 { grid-column: span 2; }
-
-    .feat-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem; margin-bottom: 16px;
-    }
-    .fi-purple { background: rgba(108,99,255,0.2); }
-    .fi-blue   { background: rgba(0,212,255,0.15); }
-    .fi-pink   { background: rgba(255,107,157,0.15); }
-    .fi-green  { background: rgba(0,255,179,0.15); }
-    .fi-orange { background: rgba(255,167,38,0.15); }
-
-    .feat-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-    .feat-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.6; }
-    .feat-tag {
-      display: inline-block; margin-top: 14px;
-      padding: 3px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.05em; text-transform: uppercase;
-    }
-    .tag-new { background: rgba(0,255,179,0.15); color: var(--accent4); }
-    .tag-core { background: rgba(108,99,255,0.15); color: var(--accent); }
-
-    /* ── COMPARISON TABLE ── */
-    .compare-wrap { margin-bottom: 80px; }
-    .compare-table { width: 100%; border-collapse: separate; border-spacing: 0; }
-    .compare-table caption {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 8px;
-      text-align: left;
-      caption-side: top;
-    }
-    .compare-table th, .compare-table td {
-      padding: 14px 20px; text-align: center; font-size: 0.84rem;
-    }
-    .compare-table thead th {
-      background: var(--surface2); font-weight: 700; font-size: 0.82rem;
-      letter-spacing: 0.03em; border-bottom: 1px solid var(--border);
-    }
-    .compare-table thead th:first-child { text-align: left; border-radius: 12px 0 0 0; }
-    .compare-table thead th:last-child { border-radius: 0 12px 0 0; background: rgba(108,99,255,0.2); color: var(--accent2); }
-    .compare-table tbody tr { border-bottom: 1px solid var(--border); transition: background .2s; }
-    .compare-table tbody tr:hover { background: rgba(108,99,255,0.05); }
-    .compare-table tbody td:first-child { text-align: left; color: var(--muted); font-weight: 500; }
-    .compare-table tbody td:last-child { background: rgba(108,99,255,0.07); font-weight: 700; color: var(--accent4); }
-    .no { color: #FF6B6B; } .maybe { color: #FFC107; } .yes { color: var(--accent4); }
-    .tbl-wrap { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-
-    /* ── WORKFLOW ── */
-    .workflow { margin-bottom: 80px; }
-    .flow-steps { display: flex; flex-direction: column; gap: 0; }
-    .flow-step {
-      display: flex; align-items: flex-start; gap: 24px;
-      padding: 28px; background: var(--surface);
-      border: 1px solid var(--border); position: relative;
-    }
-    .flow-step:first-child { border-radius: 16px 16px 0 0; }
-    .flow-step:last-child { border-radius: 0 0 16px 16px; border-top: none; }
-    .flow-step:not(:first-child):not(:last-child) { border-top: none; }
-    .step-num {
-      width: 40px; height: 40px; min-width: 40px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;
-    }
-    .sn1 { background: rgba(108,99,255,0.2); color: var(--accent); }
-    .sn2 { background: rgba(0,212,255,0.15); color: var(--accent2); }
-    .sn3 { background: rgba(255,107,157,0.15); color: var(--accent3); }
-    .sn4 { background: rgba(0,255,179,0.15); color: var(--accent4); }
-    .sn5 { background: rgba(255,167,38,0.15); color: #FFA726; }
-    .step-content { flex: 1; }
-    .step-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-    .step-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
-    .step-ai {
-      margin-top: 8px; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
-      color: var(--accent2); background: rgba(0,212,255,0.08);
-      border: 1px solid rgba(0,212,255,0.15); border-radius: 6px;
-      padding: 4px 10px; display: inline-block;
-    }
-
-    /* ── PRICING ── */
-    .pricing { margin-bottom: 80px; }
-    .plans { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-    .plan {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 32px 28px; position: relative; overflow: hidden;
-      transition: all .3s;
-    }
-    .plan:hover { transform: translateY(-4px); }
-    .plan.popular {
-      border-color: rgba(108,99,255,0.6);
-      box-shadow: 0 0 40px rgba(108,99,255,0.2);
-    }
-    .plan.popular::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-    }
-    .popular-badge {
-      position: absolute; top: 16px; right: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff; font-size: 0.68rem; font-weight: 700;
-      padding: 3px 10px; border-radius: 100px; letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .plan-name { font-size: 0.82rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-    .plan-price { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 4px; }
-    .plan-price--custom { font-size: 2rem; } /* for enterprise */
-    .plan-period { font-size: 0.8rem; color: var(--muted); margin-bottom: 24px; }
-    .plan-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 20px; }
-    .plan-feature { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.84rem; }
-    .plan-feature .chk { color: var(--accent4); font-size: 0.9rem; }
-    .plan-btn {
-      width: 100%; padding: 12px; border-radius: 10px; font-size: 0.88rem; font-weight: 700;
-      cursor: pointer; margin-top: 24px; transition: all .25s;
-    }
-    .pb-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-    .pb-ghost:hover { border-color: rgba(108,99,255,0.5); }
-    .pb-solid { background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; color: #fff; box-shadow: 0 0 30px rgba(108,99,255,0.4); }
-    .pb-solid:hover { box-shadow: 0 0 50px rgba(108,99,255,0.6); transform: translateY(-1px); }
-
-    /* ── ROI ── */
-    .roi-box {
-      background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,212,255,0.05));
-      border: 1px solid rgba(108,99,255,0.3); border-radius: 20px;
-      padding: 48px; text-align: center; margin-bottom: 80px;
-      position: relative; overflow: hidden;
-    }
-    .roi-box::before {
-      content: '';
-      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(ellipse at center, rgba(108,99,255,0.08) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .roi-num { font-size: 5rem; font-weight: 900; letter-spacing: -0.05em; color: var(--accent4); line-height: 1; }
-    .roi-label { font-size: 1rem; color: var(--muted); margin-top: 8px; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0; text-align: center; color: var(--muted); font-size: 0.82rem;
-    }
-    .footer-logo { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 8px; }
-    .footer-logo span { color: var(--accent2); }
-
-    /* ── CODE TERMINAL ── */
-    .terminal {
-      background: #020408; border: 1px solid rgba(108,99,255,0.2);
-      border-radius: 14px; overflow: hidden; margin-bottom: 80px;
-    }
-    .terminal-bar {
-      background: rgba(255,255,255,0.04); padding: 12px 16px;
-      display: flex; align-items: center; gap: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-r { background: #FF5F57; } .dot-y { background: #FFBD2E; } .dot-g { background: #28C840; }
-    .terminal-title { font-size: 0.75rem; color: var(--muted); margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
-    .terminal-body { padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.8; }
-    .tc { color: var(--muted); }
-    .tk { color: var(--accent2); }
-    .tv { color: var(--accent3); }
-    .ts { color: var(--accent4); }
-    .tn { color: #FFA726; }
-    .tb { color: var(--accent); }
-
-   /* Fix for sticky nav overlapping anchor targets */
-      #overview, #features, #pricing, #docs {
-      scroll-margin-top: 80px; }
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-    .fade-up { animation: fadeUp .6s ease both; }
-    .delay-1 { animation-delay: .1s; }
-    .delay-2 { animation-delay: .2s; }
-    .delay-3 { animation-delay: .3s; }
-
-    @media(max-width:768px) {
-      .features { grid-template-columns: 1fr; }
-      .feat-card.span2 { grid-column: span 1; }
-      .plans { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: repeat(2,1fr); }
-      .nav-pills { display: none; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadeen Waleed QA Hub - AI Native QA for ClickUp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080B14;
+            --surface: #0D1220;
+            --accent: #6C63FF;
+            --accent2: #00D4FF;
+            --text: #E8EDF5;
+            --muted: #6B7A99;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .nav-pills {
+            list-style: none;
+            display: flex;
+        }
+        .nav-pills li {
+            margin: 0 15px;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .hero .badge {
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            padding: 10px 20px;
+            border-radius: 5px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .feature-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .workflow {
+            counter-reset: step;
+        }
+        .workflow-step {
+            counter-increment: step;
+        }
+        .workflow-step::before {
+            content: counter(step);
+            background: var(--accent);
+            border-radius: 50%;
+            padding: 10px;
+            margin-right: 10px;
+        }
+        .comparison-table {
+            display: table;
+            width: 100%;
+        }
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="orb orb-1" aria-hidden="true"></div>
-<div class="orb orb-2" aria-hidden="true"></div>
-<div class="orb orb-3" aria-hidden="true"></div>
-
-<!-- NAV -->
-<nav aria-label="Main navigation">
-  <div class="wrap nav-inner">
-    <div class="logo">
-      <div class="logo-icon" aria-hidden="true">⚡</div>
-      Shadeen<span>&nbsp;QA Hub</span>
-    </div>
-    <div class="nav-pills">
-      <a href="#overview" class="nav-pill active">Overview</a>
-      <a href="#features" class="nav-pill">Features</a>
-      <a href="#pricing" class="nav-pill">Pricing</a>
-      <a href="#docs" class="nav-pill">Docs</a>
-    </div>
-<button type="button" class="nav-cta" onclick="window.location.href='signup.html'">Start Free Trial →</button>
-</nav>
-
-<!-- HERO / OVERVIEW -->
-<section id="overview" class="hero">
-  <div class="wrap">
-    <div class="hero-badge fade-up" aria-hidden="true"><div class="pulse-dot"></div>World's First AI-Native QA Platform</div>
-    <h1 class="fade-up delay-1">
-      <span class="grad">Test. Track. Fix.</span><br>All in ClickUp.
-    </h1>
-    <p class="hero-sub fade-up delay-2">
-      AI-powered test automation meets intelligent bug tracking — natively inside ClickUp. No context switching. No manual work. Just quality.
-    </p>
-    <div class="hero-btns fade-up delay-3">
-    <button type="button" class="btn-primary" onclick="window.location.href='signup.html'">🚀 Start Free Trial</button>
-      <button class="btn-ghost" onclick="window.open('https://youtu.be/EPMl2mytheQ')">▶ Watch Demo</button>
-    </div>
-  </div>
-</section>
-
-<!-- STATS -->
-<div class="wrap">
-  <div class="stats fade-up">
-    <div class="stat"><div class="stat-val c1">10M+</div><div class="stat-lbl">ClickUp Users Reached</div></div>
-    <div class="stat"><div class="stat-val c2">95%</div><div class="stat-lbl">Duplicate Detection</div></div>
-    <div class="stat"><div class="stat-val c3">5,900%</div><div class="stat-lbl">ROI for Teams</div></div>
-    <div class="stat"><div class="stat-val c4">25h</div><div class="stat-lbl">Saved Per Team / Week</div></div>
-  </div>
-</div>
-
-<!-- FEATURES -->
-<div class="wrap" id="features">
-  <div class="sec-header">
-    <div class="sec-label">Platform Features</div>
-    <h2 class="sec-title">Everything QA. One Platform.</h2>
-    <p class="sec-sub">Built from the ground up to eliminate tool sprawl.</p>
-  </div>
-
-  <div class="features">
-    <div class="feat-card span2">
-      <div class="feat-icon fi-purple" aria-hidden="true">🤖</div>
-      <div class="feat-title">AI Auto-Triage</div>
-      <div class="feat-desc">GPT-4 automatically categorizes, prioritizes, and assigns every bug the moment it's created — reducing manual triage time by 99.7%.</div>
-      <span class="feat-tag tag-core">Core MVP</span>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon fi-green" aria-hidden="true">🔗</div>
-      <div class="feat-title">Auto Test-Bug Linking</div>
-      <div class="feat-desc">Failed test? A linked bug is created instantly. Bug fixed? The test reruns and auto-closes it.</div>
-      <span class="feat-tag tag-core">Core MVP</span>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon fi-blue" aria-hidden="true">🎥</div>
-      <div class="feat-title">Codeless Test Recording</div>
-      <div class="feat-desc">Record full ClickUp workflows from the Chrome extension — no code needed.</div>
-      <span class="feat-tag tag-core">Core MVP</span>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon fi-pink" aria-hidden="true">🔮</div>
-      <div class="feat-title">Predictive Bug Analytics</div>
-      <div class="feat-desc">ML model predicts high-risk code areas before bugs happen — then suggests preventive tests.</div>
-      <span class="feat-tag tag-new">✨ New</span>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon fi-orange" aria-hidden="true">📸</div>
-      <div class="feat-title">Visual Bug Reporter</div>
-      <div class="feat-desc">Screenshot, annotate, and submit a bug in seconds from any page — AI writes the description.</div>
-      <span class="feat-tag tag-new">✨ New</span>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon fi-purple" aria-hidden="true">💊</div>
-      <div class="feat-title">Self-Healing Tests</div>
-      <div class="feat-desc">When UI changes break a locator, the AI finds the element, updates the test, and keeps running.</div>
-      <span class="feat-tag tag-core">Core MVP</span>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon fi-blue" aria-hidden="true">😊</div>
-      <div class="feat-title">Sentiment Analysis</div>
-      <div class="feat-desc">Monitors bug comment emotion in real-time — flags escalation risk before it becomes a crisis.</div>
-      <span class="feat-tag tag-new">✨ New</span>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon fi-green" aria-hidden="true">🧬</div>
-      <div class="feat-title">Traceability Matrix</div>
-      <div class="feat-desc">Full test ↔ bug relationship graph. Know exactly which tests cover which bugs, always.</div>
-      <span class="feat-tag tag-new">✨ New</span>
-    </div>
-  </div>
-</div>
-
-<!-- TERMINAL -->
-<div class="wrap">
-  <div class="sec-header">
-    <div class="sec-label">The Magic Connection</div>
-    <h2 class="sec-title">One Workflow, Zero Manual Work</h2>
-  </div>
-  <div class="terminal">
-    <div class="terminal-bar" aria-hidden="true">
-      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-      <span class="terminal-title">shadeen-qa-hub / auto-linker.ts</span>
-    </div>
-    <div class="terminal-body">
-      <span class="tc">// 1. Test fails in ClickUp</span><br>
-      <span class="tk">const</span> <span class="tv">failure</span> = <span class="tk">await</span> testEngine.<span class="ts">run</span>(test);<br><br>
-      <span class="tc">// 2. AI analyzes root cause instantly</span><br>
-      <span class="tk">const</span> <span class="tv">analysis</span> = <span class="tk">await</span> gpt4.<span class="ts">analyze</span>({<br>
-      &nbsp;&nbsp;error: <span class="tv">failure</span>.error,<br>
-      &nbsp;&nbsp;screenshot: <span class="tv">failure</span>.screenshot,<br>
-      &nbsp;&nbsp;stackTrace: <span class="tv">failure</span>.stackTrace<br>
-      });<br><br>
-      <span class="tc">// 3. Bug auto-created in ClickUp</span><br>
-      <span class="tk">const</span> <span class="tv">bug</span> = <span class="tk">await</span> clickup.<span class="ts">createTask</span>({<br>
-      &nbsp;&nbsp;name: <span class="tn">`[AUTO] ${failure.stepName} failing`</span>,<br>
-      &nbsp;&nbsp;assignees: [<span class="tv">analysis</span>.suggestedAssignee],<br>
-      &nbsp;&nbsp;priority: <span class="tv">analysis</span>.priority&nbsp;&nbsp;<span class="tc">// ← AI-determined</span><br>
-      });<br><br>
-      <span class="tc">// 4. Test reruns when bug is resolved</span><br>
-      clickup.<span class="ts">onStatusChange</span>(<span class="tv">bug</span>.id, <span class="tn">'done'</span>, () => {<br>
-      &nbsp;&nbsp;testEngine.<span class="ts">rerun</span>(<span class="tv">test</span>.id);&nbsp;&nbsp;<span class="tc">// auto-close if passes ✅</span><br>
-      });
-    </div>
-  </div>
-</div>
-
-<!-- WORKFLOW -->
-<div class="wrap">
-  <div class="sec-header">
-    <div class="sec-label">How It Works</div>
-    <h2 class="sec-title">5-Step Automated Quality Loop</h2>
-  </div>
-  <div class="workflow">
-    <div class="flow-steps">
-      <div class="flow-step">
-        <div class="step-num sn1" aria-hidden="true">01</div>
-        <div class="step-content">
-          <div class="step-title">QA Records Test in ClickUp</div>
-          <div class="step-desc">Use the Chrome extension to record any ClickUp workflow — no coding required. Test is stored as a native ClickUp task.</div>
-          <div class="step-ai" aria-label="AI suggestion">🤖 AI suggests priority, tags & schedule</div>
-        </div>
-      </div>
-      <div class="flow-step">
-        <div class="step-num sn2" aria-hidden="true">02</div>
-        <div class="step-content">
-          <div class="step-title">Test Runs on Schedule or Trigger</div>
-          <div class="step-desc">Playwright executes the test headlessly, capturing screenshots, video, and network logs in real-time.</div>
-          <div class="step-ai" aria-label="AI monitoring">🤖 AI monitors for UI anomalies during run</div>
-        </div>
-      </div>
-      <div class="flow-step">
-        <div class="step-num sn3" aria-hidden="true">03</div>
-        <div class="step-content">
-          <div class="step-title">Failure → Bug Auto-Created</div>
-          <div class="step-desc">Test fails? A fully-contextualized bug is instantly created in ClickUp — root cause, fix suggestion, assignee, and all evidence attached.</div>
-          <div class="step-ai" aria-label="AI root cause">🤖 AI provides root cause + fix suggestion</div>
-        </div>
-      </div>
-      <div class="flow-step">
-        <div class="step-num sn4" aria-hidden="true">04</div>
-        <div class="step-content">
-          <div class="step-title">Dev Fixes the Bug</div>
-          <div class="step-desc">Developer works the bug in ClickUp as normal. When they mark it done, the linked test automatically reruns.</div>
-          <div class="step-ai" aria-label="AI verification">🤖 AI verifies the fix is genuine</div>
-        </div>
-      </div>
-      <div class="flow-step">
-        <div class="step-num sn5" aria-hidden="true">05</div>
-        <div class="step-content">
-          <div class="step-title">Test Passes → Bug Auto-Closed</div>
-          <div class="step-desc">Test green? Bug closes itself. Regression test generated. Coverage score updated. Zero manual work.</div>
-          <div class="step-ai" aria-label="AI generates regression test">🤖 AI generates regression test + updates quality score</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- COMPARISON -->
-<div class="wrap compare-wrap">
-  <div class="sec-header">
-    <div class="sec-label">Competitive Analysis</div>
-    <h2 class="sec-title">Why Teams Switch</h2>
-  </div>
-  <div class="tbl-wrap">
-    <table class="compare-table">
-      <caption>Comparison of QA platforms: Shadeen QA Hub vs. Selenium, Jira, Bugzilla</caption>
-      <thead>
-        <tr>
-          <th scope="col">Feature</th>
-          <th scope="col">Selenium</th>
-          <th scope="col">Jira</th>
-          <th scope="col">Bugzilla</th>
-          <th scope="col">Shadeen QA Hub</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><th scope="row">Codeless Recording</th><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
-        <tr><th scope="row">Self-Healing Tests</th><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓ AI</td></tr>
-        <tr><th scope="row">Auto Bug Creation</th><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
-        <tr><th scope="row">AI Triage</th><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓ GPT-4</td></tr>
-        <tr><th scope="row">Duplicate Detection</th><td class="no">✗</td><td class="maybe">⚠ Basic</td><td class="no">✗</td><td class="yes">✓ 95%</td></tr>
-        <tr><th scope="row">ClickUp Native</th><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
-        <tr><th scope="row">Predictive Analytics</th><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
-        <tr><th scope="row">Setup Time</th><td class="no">Weeks</td><td class="maybe">Days</td><td class="no">Weeks</td><td class="yes">5 min</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ROI -->
-<div class="wrap">
-  <div class="roi-box">
-    <div class="roi-num">5,900%</div>
-    <div class="roi-label">Average ROI for teams of 20 · $409K saved annually · Pays back in week 1</div>
-  </div>
-</div>
-
-<!-- PRICING -->
-<div class="wrap pricing" id="pricing">
-  <div class="sec-header">
-    <div class="sec-label">Pricing</div>
-    <h2 class="sec-title">Simple, Scalable Plans</h2>
-    <p class="sec-sub">No hidden fees. Cancel anytime.</p>
-  </div>
-  <div class="plans">
-    <div class="plan">
-      <div class="plan-name">Starter</div>
-      <div class="plan-price">$9<span style="font-size:1.2rem;color:var(--muted)">/mo</span></div>
-      <div class="plan-period">per user · billed monthly</div>
-      <hr class="plan-divider">
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> 50 test runs/mo</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Bug tracking</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> ClickUp integration</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Basic AI triage</div>
-      <button type="button" class="plan-btn pb-ghost">Get Started</button>
-    </div>
-    <div class="plan popular">
-      <div class="popular-badge">Most Popular</div>
-      <div class="plan-name">Pro</div>
-      <div class="plan-price">$29<span style="font-size:1.2rem;color:var(--muted)">/mo</span></div>
-      <div class="plan-period">per user · billed monthly</div>
-      <hr class="plan-divider">
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Unlimited test runs</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Full AI suite (GPT-4)</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Self-healing tests</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Predictive analytics</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Traceability matrix</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Visual bug reporter</div>
-      <button type="button" class="plan-btn pb-solid">Start Free Trial</button>
-    </div>
-    <div class="plan">
-      <div class="plan-name">Enterprise</div>
-      <div class="plan-price plan-price--custom">Custom</div>
-      <div class="plan-period">volume pricing available</div>
-      <hr class="plan-divider">
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Everything in Pro</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> SSO + SAML</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> Dedicated support</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> On-premise option</div>
-      <div class="plan-feature"><span class="chk" aria-hidden="true">✓</span> SLA guarantee</div>
-      <button type="button" class="plan-btn pb-ghost">Contact Sales</button>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="wrap">
-    <div class="footer-logo">Shadeen<span> Waleed QA Hub</span></div>
-    <p>The world's first AI-native QA platform built for ClickUp teams.</p>
-    <p style="margin-top:16px;font-size:0.75rem;opacity:.5;">© 2026 Shadeen Waleed QA Hub · All rights reserved</p>
-  </div>
-</footer>
-
-<!-- dummy anchor for Docs (could link to external docs) -->
-<section id="docs" class="wrap" style="padding: 100px 0; min-height: 300px;">
-  <h2 class="sec-title">Documentation</h2>
-  <p class="sec-sub">We're preparing comprehensive guides and API references. Stay tuned!</p>
-</section>
+    <header>
+        <img src="logo.png" alt="Shadeen QA Hub Logo" />
+        <ul class="nav-pills">
+            <li>Home</li>
+            <li>Features</li>
+            <li>Pricing</li>
+            <li>Contact</li>
+        </ul>
+    </header>
+    <section class="hero">
+        <h1 class="badge">Welcome to Shadeen Waleed QA Hub!</h1>
+    </section>
+    <section class="stats-grid">
+        <div>Stat 1</div>
+        <div>Stat 2</div>
+        <div>Stat 3</div>
+        <div>Stat 4</div>
+    </section>
+    <section class="features">
+        <h2>Features</h2>
+        <div class="feature-card">AI Auto-Triage</div>
+        <div class="feature-card">Codeless Recording</div>
+        <div class="feature-card">Self-Healing Tests</div>
+        <div class="feature-card">Auto Test-Bug Linking</div>
+        <div class="feature-card">Predictive Bug Analytics</div>
+        <div class="feature-card">Visual Bug Reporter</div>
+        <div class="feature-card">Sentiment Analysis</div>
+        <div class="feature-card">Traceability Matrix</div>
+    </section>
+    <section class="workflow">
+        <h2>5-Step Workflow</h2>
+        <div class="workflow-step">Step 1</div>
+        <div class="workflow-step">Step 2</div>
+        <div class="workflow-step">Step 3</div>
+        <div class="workflow-step">Step 4</div>
+        <div class="workflow-step">Step 5</div>
+    </section>
+    <section class="comparison-table">
+        <h2>Comparison Table</h2>
+        <table>
+            <tr>
+                <th>Feature</th>
+                <th>Shadeen QA Hub</th>
+                <th>Selenium</th>
+                <th>Jira Bugzilla</th>
+            </tr>
+            <tr>
+                <td>Feature 1</td>
+                <td>Yes</td>
+                <td>No</td>
+                <td>Yes</td>
+            </tr>
+        </table>
+    </section>
+    <section class="roi">
+        <h2>ROI Showcase</h2>
+        <div>ROIs of 5900%</div>
+    </section>
+    <section class="pricing">
+        <h2>Pricing Plans</h2>
+        <div>Starter - $9</div>
+        <div>Pro - $29 (Most Popular)</div>
+        <div>Enterprise - Custom</div>
+    </section>
+    <footer>
+        <p>&copy; 2026 Shadeen Waleed</p>
+    </footer>
 </body>
 </html>
