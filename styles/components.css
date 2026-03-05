@@ -1,0 +1,33 @@
+/* Design Tokens and component styles for TestFlow v2.0 */
+.card-hover {
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-accent);
+}
+
+/* Simple Bug Card styling using design tokens */
+.bug-card { position: relative; overflow: hidden; background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 12px; padding: 12px; }
+.bug-card-accent { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary), transparent); }
+
+/* Tooltip guard for data-tooltip attribute */
+[data-tooltip] { position: relative; }
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+  margin-bottom: 6px;
+  z-index: 9999;
+}

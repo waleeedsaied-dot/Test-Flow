@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./styles/components.css";
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--tf-bg, #06060f);
+  color: var(--tf-text, #e2e8f0);
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+/* Dashboard search input with white border */
+.dashboard-search {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #fff;
+  border-radius: 8px;
+  color: var(--tf-text, #e2e8f0);
+  font-size: .9rem;
+}
+
+/* Buttons — use Space Grotesk and enhanced style */
+button, .btn {
+  font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  letter-spacing: .3px;
+}
+
+/* Subtle accent border for generic inputs if needed */
+input[type="text"], input[type="search"], input[type="email"], input:not([type]) {
+  border-color: rgba(255,255,255,0.8);
+}

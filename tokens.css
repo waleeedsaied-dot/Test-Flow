@@ -1,0 +1,190 @@
+/* ─────────────────────────────────────────────
+   TestFlow Design Tokens  — v1.0
+   Import this in index.css or main entry file:
+   @import './tokens.css';
+   ───────────────────────────────────────────── */
+
+:root {
+  /* ── Color palette ── */
+  --tf-bg:          #06060f;
+  --tf-surface:     #0b0b1a;
+  --tf-card:        #0f0f22;
+  --tf-card-hi:     #141430;
+  --tf-border:      rgba(255,255,255,0.06);
+  --tf-border-hi:   rgba(255,255,255,0.12);
+  --tf-glass:       rgba(255,255,255,0.05);
+
+  /* ── Brand accents ── */
+  --tf-pink:        #f72585;
+  --tf-purple:      #7209b7;
+  --tf-violet:      #a855f7;
+  --tf-cyan:        #00f5ff;
+  --tf-green:       #00ffa3;
+  --tf-yellow:      #ffd60a;
+  --tf-orange:      #ff6d00;
+  --tf-blue:        #3b82f6;
+  --tf-red:         #ef4444;
+
+  /* ── Text ── */
+  --tf-text:        #e2e8f0;
+  --tf-text-2:      #94a3b8;
+  --tf-muted:       #4b5563;
+
+  /* ── Priority colors ── */
+  --tf-prio-blocker:  #f72585;
+  --tf-prio-major:    #ffd60a;
+  --tf-prio-minor:    #00f5ff;
+
+  /* ── Status colors ── */
+  --tf-status-new:       #94a3b8;
+  --tf-status-active:    #3b82f6;
+  --tf-status-resolved:  #00ffa3;
+  --tf-status-closed:    #4b5563;
+
+  /* ── Semantic severity ── */
+  --tf-sev-critical: #f72585;
+  --tf-sev-high:     #ff6d00;
+  --tf-sev-medium:   #ffd60a;
+  --tf-sev-low:      #00ffa3;
+
+  /* ── Spacing scale ── */
+  --tf-space-1:  4px;
+  --tf-space-2:  8px;
+  --tf-space-3:  12px;
+  --tf-space-4:  16px;
+  --tf-space-5:  24px;
+  --tf-space-6:  32px;
+  --tf-space-7:  48px;
+
+  /* ── Radius ── */
+  --tf-radius-sm:   6px;
+  --tf-radius-md:   10px;
+  --tf-radius-lg:   14px;
+  --tf-radius-pill: 999px;
+
+  /* ── Typography ── */
+  --tf-font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --tf-font-body:    'Inter', sans-serif;
+  --tf-font-mono:    'JetBrains Mono', monospace;
+  --tf-font-size-xs: 0.65rem;
+  --tf-font-size-sm: 0.75rem;
+  --tf-font-size-md: 0.875rem;
+  --tf-font-size-lg: 1rem;
+  --tf-font-size-xl: 1.25rem;
+
+  /* ── Shadows / glows ── */
+  --tf-glow-pink:   0 0 20px rgba(247,37,133,0.35);
+  --tf-glow-purple: 0 0 20px rgba(114,9,183,0.35);
+  --tf-glow-green:  0 0 20px rgba(0,255,163,0.25);
+  --tf-glow-blue:   0 0 20px rgba(59,130,246,0.35);
+  --tf-shadow-card: 0 4px 24px rgba(0,0,0,0.5);
+
+  /* ── Transition ── */
+  --tf-transition: all 0.18s ease;
+}
+
+/* ─── Primitive utility classes ─── */
+
+/* Pill */
+.tf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tf-space-1);
+  padding: 3px 10px;
+  border-radius: var(--tf-radius-pill);
+  font-size: var(--tf-font-size-xs);
+  font-weight: 700;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+/* StatusBadge variants */
+.tf-status--new      { background: rgba(148,163,184,0.12); color: var(--tf-status-new);      border-color: rgba(148,163,184,0.2); }
+.tf-status--active   { background: rgba(59,130,246,0.12);  color: var(--tf-status-active);   border-color: rgba(59,130,246,0.22); }
+.tf-status--resolved { background: rgba(0,255,163,0.1);   color: var(--tf-status-resolved); border-color: rgba(0,255,163,0.22); }
+.tf-status--closed   { background: rgba(75,85,99,0.12);   color: var(--tf-status-closed);   border-color: rgba(75,85,99,0.2); }
+
+/* PrioIcon variants */
+.tf-prio--blocker { color: var(--tf-prio-blocker); }
+.tf-prio--major   { color: var(--tf-prio-major); }
+.tf-prio--minor   { color: var(--tf-prio-minor); }
+
+/* Card variants */
+.tf-card {
+  background: var(--tf-card);
+  border: 1px solid var(--tf-border);
+  border-radius: var(--tf-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--tf-shadow-card);
+  transition: var(--tf-transition);
+}
+.tf-card:hover { border-color: var(--tf-border-hi); }
+
+.tf-card--glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--tf-border);
+  border-radius: var(--tf-radius-lg);
+}
+.tf-card--glow-pink  { box-shadow: var(--tf-glow-pink),  var(--tf-shadow-card); border-color: rgba(247,37,133,0.2); }
+.tf-card--glow-blue  { box-shadow: var(--tf-glow-blue),  var(--tf-shadow-card); border-color: rgba(59,130,246,0.2); }
+.tf-card--glow-green { box-shadow: var(--tf-glow-green), var(--tf-shadow-card); border-color: rgba(0,255,163,0.18); }
+
+/* AI panel */
+.tf-ai-panel {
+  background: linear-gradient(135deg, rgba(247,37,133,0.07), rgba(59,130,246,0.04));
+  border: 1px solid rgba(247,37,133,0.18);
+  border-radius: var(--tf-radius-lg);
+  padding: var(--tf-space-5);
+}
+
+/* Sidebar token overrides — picks up --tf-* vars */
+.tf-sidebar-item {
+  display: flex; align-items: center; gap: var(--tf-space-2);
+  padding: var(--tf-space-2) var(--tf-space-3);
+  border-radius: var(--tf-radius-md);
+  font-size: var(--tf-font-size-sm);
+  cursor: pointer;
+  transition: var(--tf-transition);
+  color: var(--tf-muted);
+  border: 1px solid transparent;
+}
+.tf-sidebar-item:hover { background: var(--tf-glass); color: var(--tf-text); }
+.tf-sidebar-item.active {
+  background: rgba(247,37,133,0.1);
+  color: var(--tf-pink);
+  border-color: rgba(247,37,133,0.18);
+}
+
+/* Kanban card token */
+.tf-kanban-card {
+  background: var(--tf-card);
+  border: 1px solid var(--tf-border);
+  border-radius: var(--tf-radius-md);
+  padding: var(--tf-space-3);
+  transition: var(--tf-transition);
+  cursor: pointer;
+}
+.tf-kanban-card:hover {
+  border-color: var(--tf-border-hi);
+  transform: translateY(-2px);
+  box-shadow: var(--tf-shadow-card);
+}
+
+/* Settings section */
+.tf-settings-section {
+  background: var(--tf-card);
+  border: 1px solid var(--tf-border);
+  border-radius: var(--tf-radius-lg);
+  padding: var(--tf-space-5);
+  margin-bottom: var(--tf-space-4);
+}
+.tf-settings-label {
+  font-size: var(--tf-font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--tf-muted);
+  margin-bottom: var(--tf-space-3);
+}
